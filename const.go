@@ -7,19 +7,21 @@ const (
 	MAXWELEM  = 16
 	IOHDRSZ   = 24
 	STATMAX   = 65535
+)
 
-	OREAD     = 0
-	OWRITE    = 1
-	ORDWR     = 2
-	OEXEC     = 3
-	OTRUNC    = 16
-	OCEXEC    = 32
-	ORCLOSE   = 64
-	ODIRECT   = 128
-	ONONBLOCK = 256
-	OEXCL     = 0x1000
-	OLOCK     = 0x2000
-	OAPPEND   = 0x4000
+const (
+	OREAD     = 0      // Open for Read
+	OWRITE    = 1      // Write
+	ORDWR     = 2      // Read and write
+	OEXEC     = 3      // Execute, == read but check execute permission
+	OTRUNC    = 16     // Truncate file first (except for exec)
+	OCEXEC    = 32     // Close on exec
+	ORCLOSE   = 64     // Remove on close
+	ODIRECT   = 128    // Direct access
+	ONONBLOCK = 256    // Non-blocking call
+	OEXCL     = 0x1000 // Exclusive use (create only)
+	OLOCK     = 0x2000 // Lock after opening
+	OAPPEND   = 0x4000 // Append only
 )
 
 const (
@@ -31,14 +33,14 @@ const (
 
 // Qid.Type bits
 const (
-	QTDIR     = 0x80
-	QTAPPEND  = 0x40
-	QTEXCL    = 0x20
-	QTMOUNT   = 0x10
-	QTAUTH    = 0x08
-	QTTMP     = 0x04
-	QTSYMLINK = 0x02
-	QTFILE    = 0x00
+	QTDIR     = 0x80 // type bit for directories
+	QTAPPEND  = 0x40 // type bit for append only files
+	QTEXCL    = 0x20 // type bit for exclusive use files
+	QTMOUNT   = 0x10 // type bit for mounted channel
+	QTAUTH    = 0x08 // type bit for authentication file
+	QTTMP     = 0x04 // type bit for non-backed-up file
+	QTSYMLINK = 0x02 // type bit for symbolic link
+	QTFILE    = 0x00 // type bit for plain file
 )
 
 // Dir.Mode bits
@@ -49,9 +51,9 @@ const (
 	DMMOUNT  = 0x10000000 // mount points
 	DMAUTH   = 0x08000000 // authentication file
 	DMTMP    = 0x04000000 // non-backed-up files
-	DMREAD   = 0x4
-	DMWRITE  = 0x2
-	DMEXEC   = 0x1
+	DMREAD   = 0x4        // mode bit for read permission
+	DMWRITE  = 0x2        // mode bit for write permission
+	DMEXEC   = 0x1        // mode bit for execute permission
 )
 
 // 9P2000.u extensions
@@ -62,11 +64,12 @@ const (
 	DMSOCKET    = 0x00100000 // socket
 	DMSETUID    = 0x00080000 // setuid
 	DMSETGID    = 0x00040000 // setgid
-	// DMSETVTX = 0x00000000  sticky bit
+	// sticky bit
+	// DMSETVTX = 0x00000000
 )
 
 const (
-	NOTAG = 0xffff
-	NOFID = 0xffffffff
-	NOUID = 0xffffffff
+	NOTAG = 0xffff     // Dummy tag
+	NOFID = 0xffffffff // Dummy fid
+	NOUID = 0xffffffff // Dummy uid
 )

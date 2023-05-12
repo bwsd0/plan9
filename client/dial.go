@@ -21,6 +21,7 @@ func DialService(service string) (*Conn, error) {
 	return Dial("unix", ns+"/"+service)
 }
 
+// Mount mounts a 9P server's files into the file system.
 func Mount(network, addr string) (*Fsys, error) {
 	c, err := Dial(network, addr)
 	if err != nil {

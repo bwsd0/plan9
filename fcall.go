@@ -6,6 +6,7 @@ import (
 )
 
 type Fcall struct {
+	// Type is one Tversion, Rversion, Tattach, Rattach etc.
 	Type    uint8
 	Fid     uint32
 	Tag     uint16
@@ -57,6 +58,8 @@ const (
 	Rread
 	Twrite
 	Rwrite
+	// The clunk request informs the file server that the current file represented
+	// by fid is no longer needed by the client.
 	Tclunk
 	Rclunk
 	Tremove

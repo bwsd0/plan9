@@ -6,6 +6,7 @@ import (
 	"bwsd.dev/plan9"
 )
 
+// Fsys represents a connection to a 9P server.
 type Fsys struct {
 	root *Fid
 }

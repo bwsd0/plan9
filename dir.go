@@ -29,6 +29,14 @@ type Dir struct {
 	Uid    string // owner name
 	Gid    string // group name
 	Muid   string // last modifier time
+
+	// 9P2000.u extension fields
+	// Plan 9 represents user identifiers using strings whereas Unix-like and POSIX
+	// environments use numeric identifiers.
+	// uidnum uint
+	// gidnum uint
+	// muidnum uint
+	// ext []byte extended info
 }
 
 var nullDir = Dir{
@@ -51,6 +59,7 @@ func (d *Dir) Null() {
 	*d = nullDir
 }
 
+// pdir encodes a 9P stat call on d into b.
 func pdir(b []byte, d *Dir) []byte {
 	n := len(b)
 	b = pbit16(b, 0) // length, filled in later
@@ -110,6 +119,7 @@ func UnmarshalDir(b []byte) (d *Dir, err error) {
 	return d, nil
 }
 
+// String returns the string representation of dir
 func (d *Dir) String() string {
 	return fmt.Sprintf("'%s' '%s' '%s' '%s' q %v m %#o at %d mt %d l %d t %d d %d",
 		d.Name, d.Uid, d.Gid, d.Muid, d.Qid, d.Mode,
@@ -123,8 +133,7 @@ func dumpsome(b []byte) string {
 		b = b[0:64]
 	}
 
-	// TODO(bwsd): optimize for Latin-1 case using stdlib strconv/quote.go and
-	// generate unicode tables so that strconv
+	// TODO(bwsd): optimize for Latin-1 case using stdlib strconv/quote.go
 	printable := true
 	for _, c := range b {
 		if (c != 0 && c != '\n' && c != '\t' && c < ' ') || c > 127 {
