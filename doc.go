@@ -65,6 +65,27 @@ messages between version requests is called a session.
 
 See: version(5)
 
+## Version string format
+
+A version must always begin with "9P". If a the server does not understand a
+client's version string, it should respond with an Rversion message (not Rerror)
+with the string "unknown".
+
+If the client string contains one or more period characters, the intial
+substring up to but not including any single period in the version strings
+defines a version of the protocol. After stripping any such period-separated
+suffix, the server is allowed to respond a string of the form 9Pnnnn, where nnnn
+is less than or equal to the digits sent by the client.
+
+The client and server will use the protocol version defined by the server's
+response for all subsequent communication on the connection.
+
+A successful version request initiliazes the connection. All outstanding I/O on
+the connection is aborted; all active fids are freed ("clunked") automatically.
+The set of messages between the version requests is called a session.
+
+See: 9pclient(3)
+
 # Fid
 
 Most T-messages contain a fid, a 32-bit unsigned integer that the client uses
