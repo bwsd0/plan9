@@ -204,31 +204,39 @@ of which the user is a member).
 
 ## File ownership
 
-Each file has an associated owner and group id and three sets of permissions:
-those of the owner, those of the group, and those of “other” users. When the
-owner attempts to do something to a file, the owner, group, and other
-permissions are consulted, and if any of them grant the requested per- mission,
-the operation is allowed. For someone who is not the owner, but is a member of
-the file's group, the group and other permissions are consulted. For everyone
-else, the other permissions are used. Each set of permissions says whether
-reading is allowed, whether writing is allowed, and whether executing is
-allowed. A walk in a directory is regarded as executing the directory, not
-reading it. Per- missions are kept in the low-order bits of the file mode:
-owner read/write/execute permission represented as 1 in bits 8, 7, and 6
-respectively (using 0 to number the low order). The group permissions are in
-bits 5, 4, and 3, and the other permissions are in bits 2, 1, and 0.
+Each file has an associated owner and group ID and three sets of permissions:
+those of the owner, those of the group, and those of other users. When the owner
+attempts to do something to a file, the owner, group, and other permissions are
+consulted, and if any of them grant the requested permission, the operation is
+allowed. For someone who is not the owner, but is a member of the file's group,
+the group and other permissions are consulted. For everyone else, the other
+permissions are used. Each set of permissions says whether reading is allowed,
+whether writing is allowed, and whether executing is allowed. A walk in a
+directory is regarded as executing the directory, not reading it. Per- missions
+are kept in the low-order bits of the file mode: owner read/write/execute
+permission represented as 1 in bits 8, 7, and 6 respectively (using 0 to number
+the low order). The group permissions are in bits 5, 4, and 3, and the other
+permissions are in bits 2, 1, and 0.
 
 ## File modes
 
 The file mode contains some additional attributes besides the permissions. If
 bit 31 (DMDIR) is set, the file is a directory; if bit 30 (DMAPPEND) is set,
-the file is append- only (offset is ignored in writes); if bit 29 (DMEXCL) is
+the file is append-only (offset is ignored in writes); if bit 29 (DMEXCL) is
 set, the file is exclusive-use (only one client may have it open at a time); if
 bit 27 (DMAUTH) is set, the file is an authentication file established by auth
 messages; if bit 26 (DMTMP) is set, the contents of the file (or directory) are
 not included in nightly archives. (Bit 28 is skipped for historical reasons.)
+
 These bits are reproduced, from the top bit down, in the type byte of the Qid:
-QTDIR, QTAPPEND, QTEXCL, (skipping one bit) QTAUTH, and QTTMP. The name
-QTFILE, defined to be zero, identifies the value of the type for a plain file.
+
+	QTDIR
+	QTAPPEND
+	QTEXCL (skipping one bit)
+	QTAUTH
+	QTTMP
+
+The name QTFILE, defined to be zero, identifies the value of the type for a
+plain file.
 */
 package plan9

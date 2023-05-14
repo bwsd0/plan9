@@ -61,7 +61,7 @@ func (fid *Fid) clunked() error {
 	return nil
 }
 
-func (fid *Fid) Create(name string, mode uint8, perm plan9.Perm) error {
+func (fid *Fid) Create(name string, mode uint8, perm uint32) error {
 	conn, err := fid.conn()
 	if err != nil {
 		return err

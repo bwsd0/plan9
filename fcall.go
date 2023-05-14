@@ -5,38 +5,6 @@ import (
 	"io"
 )
 
-type Fcall struct {
-	// Type is one Tversion, Rversion, Tattach, Rattach etc.
-	Type    uint8
-	Fid     uint32
-	Tag     uint16
-	Msize   uint32
-	Version string   // Tversion, Rversion
-	Oldtag  uint16   // Tflush
-	Ename   string   // Rerror
-	Qid     Qid      // Rattach, Ropen, Rcreate
-	Iounit  uint32   // Ropen, Rcreate
-	Aqid    Qid      // Rauth
-	Afid    uint32   // Tauth, Tattach
-	Uname   string   // Tauth, Tattach
-	Aname   string   // Tauth, Tattach
-	Perm    Perm     // Tcreate
-	Name    string   // Tcreate
-	Mode    uint8    // Tcreate, Topen
-	Newfid  uint32   // Twalk
-	Wname   []string // Twalk
-	Wqid    []Qid    // Rwalk
-	Offset  uint64   // Tread, Twrite
-	Count   uint32   // Tread, Rwrite
-	Data    []byte   // Twrite, Rread
-	Stat    []byte   // Twstat, Rstat
-
-	// 9P2000.u extensions
-	Errno     uint32 // Rerror
-	Uid       uint32 // Tattach, Tauth
-	Extension string // Tcreate
-}
-
 const (
 	Tversion = 100 + iota
 	Rversion
@@ -58,8 +26,6 @@ const (
 	Rread
 	Twrite
 	Rwrite
-	// The clunk request informs the file server that the current file represented
-	// by fid is no longer needed by the client.
 	Tclunk
 	Rclunk
 	Tremove
@@ -70,6 +36,39 @@ const (
 	Rwstat
 	Tmax
 )
+
+// Fcall represents a 9P2000 message.
+type Fcall struct {
+	// Type is one Tversion, Rversion, Tattach, Rattach etc.
+	Type    uint8    // Message type
+	Fid     uint32   // File identifier
+	Tag     uint16   // Message tag
+	Msize   uint32   // Maximum message size
+	Version string   // Tversion, Rversion
+	Oldtag  uint16   // Tflush
+	Ename   string   // Rerror
+	Qid     Qid      // Rattach, Ropen, Rcreate
+	Iounit  uint32   // Ropen, Rcreate
+	Aqid    Qid      // Rauth
+	Afid    uint32   // Tauth, Tattach
+	Uname   string   // Tauth, Tattach (user name)
+	Aname   string   // Tauth, Tattach (attach name)
+	Perm    uint32   // Tcreate (file permission mode)
+	Name    string   // Tcreate
+	Mode    uint8    // Tcreate, Topen
+	Newfid  uint32   // Twalk
+	Wname   []string // Twalk
+	Wqid    []Qid    // Rwalk
+	Offset  uint64   // Tread, Twrite
+	Count   uint32   // Tread, Rwrite
+	Data    []byte   // Twrite, Rread
+	Stat    []byte   // Twstat, Rstat
+
+	// 9P2000.u extensions
+	Errno     uint32 // Rerror (error code)
+	Uid       uint32 // Tattach, Tauth
+	Extension string // Tcreate (special file description)
+}
 
 func (f *Fcall) Bytes() ([]byte, error) {
 	b := pbit32(nil, 0) // length: fill in later
@@ -115,7 +114,7 @@ func (f *Fcall) Bytes() ([]byte, error) {
 	case Tcreate:
 		b = pbit32(b, f.Fid)
 		b = pstring(b, f.Name)
-		b = pperm(b, f.Perm)
+		b = pbit32(b, uint32(f.Perm))
 		b = pbit8(b, f.Mode)
 
 	case Tread:
@@ -242,7 +241,7 @@ func UnmarshalFcall(b []byte) (f *Fcall, err error) {
 	case Tcreate:
 		f.Fid, b = gbit32(b)
 		f.Name, b = gstring(b)
-		f.Perm, b = gperm(b)
+		f.Perm, b = gbit32(b)
 		f.Mode, b = gbit8(b)
 
 	case Tread:

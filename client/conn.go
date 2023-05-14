@@ -26,8 +26,7 @@ type Conn struct {
 
 var errClosed = fmt.Errorf("connection has been closed")
 
-// Close forces a close of the connection and all Fids derived
-// from it.
+// Close closes the connection and all Fids derived from it.
 func (c *Conn) Close() error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -95,7 +94,7 @@ func NewConn(rwc io.ReadWriteCloser) (*Conn, error) {
 		nexttag:  1,
 		nextfid:  1,
 		msize:    131072,
-		version:  "9P2000",
+		version:  plan9.VERSION9P,
 		refCount: 1,
 	}
 
@@ -109,6 +108,10 @@ func NewConn(rwc io.ReadWriteCloser) (*Conn, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// TODO(bwsd): implement protocol version negotiation according to spec.
+	// See: 9pclient(3)
+
 	if rx.Type != plan9.Rversion || rx.Tag != plan9.NOTAG {
 		return nil, plan9.ProtocolError(fmt.Sprintf("invalid type/tag in Tversion exchange: %v %v", rx.Type, rx.Tag))
 	}
@@ -117,7 +120,7 @@ func NewConn(rwc io.ReadWriteCloser) (*Conn, error) {
 		return nil, plan9.ProtocolError(fmt.Sprintf("invalid msize %d in Rversion", rx.Msize))
 	}
 	c.msize = rx.Msize
-	if rx.Version != "9P2000" {
+	if rx.Version != plan9.VERSION9P {
 		return nil, plan9.ProtocolError(fmt.Sprintf("invalid version %s in Rversion", rx.Version))
 	}
 	return &Conn{
@@ -137,7 +140,7 @@ func (c *conn) newFid(fid uint32, qid plan9.Qid) *Fid {
 func (c *conn) newfidnum() (uint32, error) {
 	c.x.Lock()
 	defer c.x.Unlock()
-	for fidnum, _ := range c.freefid {
+	for fidnum := range c.freefid {
 		delete(c.freefid, fidnum)
 		return fidnum, nil
 	}
@@ -159,7 +162,7 @@ func (c *conn) newtag(ch chan *plan9.Fcall) (uint16, error) {
 	c.x.Lock()
 	defer c.x.Unlock()
 	var tagnum uint16
-	for tagnum, _ = range c.freetag {
+	for tagnum = range c.freetag {
 		delete(c.freetag, tagnum)
 		goto found
 	}
