@@ -12,8 +12,8 @@ func TestPstringTooLong(t *testing.T) {
 		s    string
 	}{
 		name: "string too long",
-		b:    make([]byte, 1<<16),
-		s:    strings.Repeat("b", (1<<16)+1),
+		b:    make([]byte, STATMAX),
+		s:    strings.Repeat("b", STATMAX+1),
 	}
 	t.Run(tt.name, func(t *testing.T) {
 		defer func() { _ = recover() }()
