@@ -20,10 +20,12 @@ type Dir struct {
 	Dev  uint32 // server subtype
 
 	// file data
-	Qid    Qid    // Unique ID from the server
-	Mode   Perm   // Permission bits
-	Atime  uint32 // last read time
-	Mtime  uint32 // last write time
+	Qid  Qid    // Unique ID from the server
+	Mode uint32 // Permission bits
+	// BUG(bwsd): vulnerable to Y2K38 pproblem
+	Atime uint32 // last read time
+	Mtime uint32 // last write time
+
 	Length uint64 // file length
 	Name   string // last element of path
 	Uid    string // owner name
@@ -33,17 +35,17 @@ type Dir struct {
 	// 9P2000.u extension fields
 	// Plan 9 represents user identifiers using strings whereas Unix-like and POSIX
 	// environments use numeric identifiers.
-	// uidnum uint
-	// gidnum uint
-	// muidnum uint
-	// ext []byte extended info
+	// Uidnum uint
+	// Gidnum uint
+	// Muidnum uint
+	// Ext []byte extended info
 }
 
 var nullDir = Dir{
 	^uint16(0),
 	^uint32(0),
 	Qid{^uint64(0), ^uint32(0), ^uint8(0)},
-	^Perm(0),
+	^uint32(0),
 	^uint32(0),
 	^uint32(0),
 	^uint64(0),
@@ -59,14 +61,14 @@ func (d *Dir) Null() {
 	*d = nullDir
 }
 
-// pdir encodes a 9P stat call on d into b.
+// pdir encodes a 9P stat call on dir d into buffer b.
 func pdir(b []byte, d *Dir) []byte {
 	n := len(b)
 	b = pbit16(b, 0) // length, filled in later
 	b = pbit16(b, d.Type)
 	b = pbit32(b, d.Dev)
 	b = pqid(b, d.Qid)
-	b = pperm(b, d.Mode)
+	b = pbit32(b, uint32(d.Mode))
 	b = pbit32(b, d.Atime)
 	b = pbit32(b, d.Mtime)
 	b = pbit64(b, d.Length)
@@ -104,7 +106,7 @@ func UnmarshalDir(b []byte) (d *Dir, err error) {
 	d.Type, b = gbit16(b)
 	d.Dev, b = gbit32(b)
 	d.Qid, b = gqid(b)
-	d.Mode, b = gperm(b)
+	d.Mode, b = gbit32(b)
 	d.Atime, b = gbit32(b)
 	d.Mtime, b = gbit32(b)
 	d.Length, b = gbit64(b)
@@ -202,15 +204,6 @@ func (p Perm) String() string {
 		}
 	}
 	return s
-}
-
-func gperm(b []byte) (Perm, []byte) {
-	p, b := gbit32(b)
-	return Perm(p), b
-}
-
-func pperm(b []byte, p Perm) []byte {
-	return pbit32(b, uint32(p))
 }
 
 // Qid represent's a 9P server's unique identification for a file.
