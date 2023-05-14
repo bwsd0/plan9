@@ -1,5 +1,13 @@
 package plan9
 
+/*
+The gbit and pbit helper functions that translate and pack numbers and byte
+sequences in little-endian byte order.
+*/
+
+// FIXME(bwsd): bounds checking elimination is not performed.
+// See: golang.org/issue/14808
+
 // gbit8 decodes a uint8 from b and returns that value and the remaining slice
 // of b.
 func gbit8(b []byte) (uint8, []byte) {
@@ -9,12 +17,14 @@ func gbit8(b []byte) (uint8, []byte) {
 // gbit16 decodes a uint16 from b and returns that value and the remaining slice
 // of b.
 func gbit16(b []byte) (uint16, []byte) {
+	// _ = b[1] compiler BCE hint; see: golang.org/issue/14808
 	return uint16(b[0]) | uint16(b[1])<<8, b[2:]
 }
 
 // gbit32 decodes a uint32 from from b and returns that value and the remaining
 // slice of b.
 func gbit32(b []byte) (uint32, []byte) {
+	// _ = b[3] compiler BCE hint; see: golang.org/issue/14808
 	return uint32(b[0]) | uint32(b[1])<<8 | uint32(b[2])<<16 | uint32(b[3])<<24, b[4:]
 }
 
@@ -83,9 +93,10 @@ func pbit64(b []byte, x uint64) []byte {
 	return b
 }
 
-// pstring copies the string s to b, prepending it with a 16-bit length in
-// little-endian order, and returning the remaining slice of b. If the buffer is
-// too small, pstring will panic.
+// pstring copies the string s to b, prepending it with a 16-bit length and
+// returning the remaining slice of b.
+//
+// If the buffer is too small, pstring will panic.
 func pstring(b []byte, s string) []byte {
 	if len(s) >= 1<<16 {
 		panic(ProtocolError("string too long"))
