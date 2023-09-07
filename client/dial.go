@@ -22,7 +22,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"runtime"
 	"strings"
 )
 
@@ -84,28 +83,28 @@ func MountServiceAname(service, aname string) (*Fsys, error) {
 
 // Namespace returns the path to the name space directory.
 func Namespace() string {
-	disp := os.Getenv("DISPLAY")
-	if disp == "" && runtime.GOOS == "darwin" {
-		disp = ":0.0"
+	var disp string
+
+	disp = os.Getenv("DISPLAY")
+	if disp == "" {
+		log.Fatalf("$DISPLAY is not set")
 	}
+
 	if i := strings.LastIndex(disp, ":"); i < 0 {
 		log.Fatalf("bad display: %s", disp)
 	}
-	// canonicalize $host:$display.$screen => $host:$display
+
+	// canonicalize: host:display.screen => host:display
 	if i := strings.LastIndex(disp, "."); i > 0 {
 		disp = disp[0 : i-1]
 	}
-	if runtime.GOOS == "darwin" {
-		// Turn /tmp/launch/:0 into _tmp_launch_:0 (OS X 10.5).
-		disp = strings.Replace(disp, "/", "_", -1)
-	}
+
 	// NOTE: plan9port creates this directory on demand.
 	// Maybe someday we'll need to do that.
 
-	ns := os.Getenv("NAMESPACE")
-	if ns == "" {
-		ns = fmt.Sprintf("/tmp/ns/%s.%s", getuser(), disp)
+	if ns := os.Getenv("NAMESPACE"); len(ns) > 0 {
+		return ns
 	}
 
-	return ns
+	return fmt.Sprintf("/tmp/ns/%s.%s", getuser(), disp)
 }
