@@ -8,7 +8,7 @@ package memdraw
 import (
 	"sort"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 type polySeg struct {

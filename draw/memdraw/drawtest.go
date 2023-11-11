@@ -22,8 +22,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"bwsd.dev/draw"
-	"bwsd.dev/draw/memdraw"
+	"bwsd.dev/plan9/draw"
+	"bwsd.dev/plan9/draw/memdraw"
 )
 
 const DBG = 0

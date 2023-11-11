@@ -3,7 +3,7 @@ package frame
 import (
 	"fmt"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func (f *Frame) drawtext(pt draw.Point, text, back *draw.Image) {

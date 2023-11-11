@@ -1,7 +1,7 @@
 package frame
 
 import (
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 // bxscan splits text into boxes inside tmpf starting at *ppt,

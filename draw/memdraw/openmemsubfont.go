@@ -10,7 +10,7 @@ import (
 	"io"
 	"os"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func openmemsubfont(name string) (*subfont, error) {

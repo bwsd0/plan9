@@ -17,7 +17,7 @@
 package memdraw
 
 import (
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func lhideop(src *Image, screenr draw.Rectangle, clipr draw.Rectangle, etc interface{}, insave int) {

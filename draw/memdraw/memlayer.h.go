@@ -1,6 +1,6 @@
 package memdraw
 
-import "bwsd.dev/draw"
+import "bwsd.dev/plan9/draw"
 
 type Refreshfn func(*Image, draw.Rectangle, interface{})
 

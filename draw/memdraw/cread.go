@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func atoi(s []byte) int {

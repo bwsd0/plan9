@@ -8,7 +8,7 @@ package memdraw
 import (
 	"unicode/utf8"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func memimagestring(b *Image, p draw.Point, color *Image, cp draw.Point, f *subfont, s []byte) draw.Point {

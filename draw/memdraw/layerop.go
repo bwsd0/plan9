@@ -1,7 +1,7 @@
 package memdraw
 
 import (
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func _layerop(fn func(*Image, draw.Rectangle, draw.Rectangle, interface{}, int), i *Image, r draw.Rectangle, clipr draw.Rectangle, etc interface{}, front *Image) {

@@ -1,6 +1,6 @@
 package memdraw
 
-import "bwsd.dev/draw"
+import "bwsd.dev/plan9/draw"
 
 /*
  * Memdata is allocated from main pool, but .data from the image pool.

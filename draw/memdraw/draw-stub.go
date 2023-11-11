@@ -6,7 +6,7 @@
 package memdraw
 
 import (
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func (i *Image) Draw(r draw.Rectangle, src *Image, sp draw.Point, mask *Image, mp draw.Point, op draw.Op) {

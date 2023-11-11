@@ -13,7 +13,7 @@ import (
 	"strings"
 	"unsafe"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 const _DBG = false

@@ -1,6 +1,6 @@
 package frame
 
-import "bwsd.dev/draw"
+import "bwsd.dev/plan9/draw"
 
 // Delete deletes from f the text between p0 and p1;
 // p1 points at the first rune beyond the deletion.

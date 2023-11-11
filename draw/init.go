@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"bwsd.dev/draw/drawfcall"
+	"bwsd.dev/plan9/draw/drawfcall"
 )
 
 // Display locking:

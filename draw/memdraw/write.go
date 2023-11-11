@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 const (

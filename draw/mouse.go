@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"bwsd.dev/draw/drawfcall"
+	"bwsd.dev/plan9/draw/drawfcall"
 )
 
 // Mouse is the structure describing the current state of the mouse.

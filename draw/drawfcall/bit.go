@@ -1,4 +1,4 @@
-package drawfcall // import "bwsd.dev/draw/drawfcall"
+package drawfcall // import "bwsd.dev/plan9/draw/drawfcall"
 
 // Note that these are big-endian, unlike Plan 9 fcalls, which are little-endian.
 

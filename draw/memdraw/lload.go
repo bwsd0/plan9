@@ -6,7 +6,7 @@
 
 package memdraw
 
-import "bwsd.dev/draw"
+import "bwsd.dev/plan9/draw"
 
 func Load(dst *Image, r draw.Rectangle, data []uint8, iscompressed bool) (int, error) {
 	loadfn := loadmemimage

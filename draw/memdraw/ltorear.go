@@ -6,7 +6,7 @@
 
 package memdraw
 
-import "bwsd.dev/draw"
+import "bwsd.dev/plan9/draw"
 
 func _memltorear(i *Image, rear *Image) {
 	l := i.Layer

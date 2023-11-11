@@ -3,7 +3,7 @@
 package frame
 
 import (
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 // A Frame is a frame of editable text in a single font on a raster display.

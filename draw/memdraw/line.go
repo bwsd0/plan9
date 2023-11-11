@@ -1,7 +1,7 @@
 package memdraw
 
 import (
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 const (

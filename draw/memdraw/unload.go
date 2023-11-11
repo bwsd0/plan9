@@ -8,7 +8,7 @@ package memdraw
 import (
 	"fmt"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func unloadmemimage(i *Image, r draw.Rectangle, data []uint8) (int, error) {

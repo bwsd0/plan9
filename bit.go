@@ -98,7 +98,7 @@ func pbit64(b []byte, x uint64) []byte {
 //
 // If the buffer is too small, pstring will panic.
 func pstring(b []byte, s string) []byte {
-	if len(s) >= 1<<16 {
+	if len(s) > STATMAX {
 		panic(ProtocolError("string too long"))
 	}
 	b = pbit16(b, uint16(len(s)))

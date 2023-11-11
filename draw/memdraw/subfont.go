@@ -5,7 +5,7 @@
 
 package memdraw
 
-import "bwsd.dev/draw"
+import "bwsd.dev/plan9/draw"
 
 func allocmemsubfont(name string, n int, height int, ascent int, info []draw.Fontchar, i *Image) *subfont {
 	f := new(subfont)

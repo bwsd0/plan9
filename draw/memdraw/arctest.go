@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"syscall"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func main(argc int, argv []*int8) {

@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"bwsd.dev/draw"
-	"bwsd.dev/draw/frame"
+	"bwsd.dev/plan9/draw"
+	"bwsd.dev/plan9/draw/frame"
 )
 
 var display *draw.Display

@@ -11,7 +11,7 @@ package memdraw
 import (
 	"fmt"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func allocmemimaged(r draw.Rectangle, chan_ draw.Pix, md *_Memdata, X interface{}) (*Image, error) {

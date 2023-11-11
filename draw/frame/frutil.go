@@ -3,7 +3,7 @@ package frame
 import (
 	"unicode/utf8"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 // canfit returns the number of runes from b that

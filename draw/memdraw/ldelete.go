@@ -6,7 +6,7 @@
 
 package memdraw
 
-import "bwsd.dev/draw"
+import "bwsd.dev/plan9/draw"
 
 func LDelete(i *Image) {
 	l := i.Layer

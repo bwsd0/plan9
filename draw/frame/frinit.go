@@ -1,7 +1,7 @@
 package frame
 
 import (
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 // Init prepares the frame f so characters drawn in it

@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"bwsd.dev/draw"
+	"bwsd.dev/plan9/draw"
 )
 
 func readmemimage(fd *os.File) (*Image, error) {
