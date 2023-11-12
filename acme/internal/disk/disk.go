@@ -3,7 +3,6 @@ package disk
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"reflect"
@@ -133,7 +132,7 @@ func (d *Disk) read(b *block, r []rune) {
 }
 
 func TempFile() *os.File {
-	f, err := ioutil.TempFile("", fmt.Sprintf("acme.%d.*", os.Getpid()))
+	f, err := os.CreateTemp("", fmt.Sprintf("acme.%d.*", os.Getpid()))
 	if err != nil {
 		// TODO rescue()
 		log.Fatalf("creating temp file: %v", err)

@@ -2,7 +2,7 @@ package complete
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 	"unicode/utf8"
 )
@@ -20,8 +20,7 @@ func Complete(dir, s string) (*Completion, error) {
 		return nil, fmt.Errorf("slash character in name argument to complete")
 	}
 
-	// Note: ioutil.ReadDir sorts, so no sort below.
-	dirs, err := ioutil.ReadDir(dir)
+	dirs, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}

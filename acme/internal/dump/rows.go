@@ -3,7 +3,6 @@ package dump
 import (
 	"bufio"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strconv"
 	"unicode/utf8"
@@ -483,7 +482,7 @@ func Load(row *wind.Row, file *string, initing bool) bool {
 		}
 		if ndumped >= 0 {
 			// simplest thing is to put it in a file and load that
-			f, err := ioutil.TempFile("", fmt.Sprintf("acme.%d.*", os.Getpid()))
+			f, err := os.CreateTemp("", fmt.Sprintf("acme.%d.*", os.Getpid()))
 			if err != nil {
 				alog.Printf("can't create temp file: %v\n", err)
 				return bad()

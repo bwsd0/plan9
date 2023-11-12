@@ -86,8 +86,8 @@ func (fid *Fid) Dirread() ([]*plan9.Dir, error) {
 }
 
 func (fid *Fid) Dirreadall() ([]*plan9.Dir, error) {
-	// Note: Cannot use ioutil.ReadAll / io.ReadAll here
-	// because it assumes it can read small amounts.
+	// Note: Cannot use io.ReadAll here because it assumes
+	// it can read small amounts.
 	// Plan 9 requires providing a buffer big enough for
 	// at least a single directory entry.
 	var dirs []*plan9.Dir

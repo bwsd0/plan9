@@ -3,7 +3,6 @@ package draw
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -44,7 +43,7 @@ func (d *Display) OpenFont(name string) (*Font, error) {
 func (d *Display) openFont1(name string) (*Font, error) {
 	scale, fname := parsefontscale(name)
 
-	data, err := ioutil.ReadFile(fname)
+	data, err := os.ReadFile(fname)
 
 	if err != nil && strings.HasPrefix(fname, "/lib/font/bit/") {
 		root := os.Getenv("PLAN9")
@@ -52,7 +51,7 @@ func (d *Display) openFont1(name string) (*Font, error) {
 			root = "/usr/local/plan9"
 		}
 		name1 := root + "/font/" + fname[len("/lib/font/bit/"):]
-		data1, err1 := ioutil.ReadFile(name1)
+		data1, err1 := os.ReadFile(name1)
 		fname, data, err = name1, data1, err1
 		if scale > 1 {
 			name = fmt.Sprintf("%d*%s", scale, fname)

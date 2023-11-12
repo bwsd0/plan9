@@ -3,7 +3,6 @@ package draw
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -11,7 +10,7 @@ import (
 
 func getsubfont(d *Display, name string) (*subfont, error) {
 	scale, fname := parsefontscale(name)
-	data, err := ioutil.ReadFile(fname)
+	data, err := os.ReadFile(fname)
 	if err != nil && strings.HasPrefix(fname, "/mnt/font/") {
 		data1, err1 := fontPipe(fname[len("/mnt/font/"):])
 		if err1 == nil {
