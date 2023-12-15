@@ -70,15 +70,13 @@ func (f *fileView) Delete(pos, end int) {
 	}
 }
 
-var Argtext *Text
-
-var Typetext *Text // global because Text.close needs to clear it
-
-var Seltext *Text
-
-var Mousetext *Text // global because Text.close needs to clear it
-
-var Barttext *Text // shared between mousetask and keyboardthread
+var (
+	Argtext   *Text
+	Typetext  *Text // global because Text.close needs to clear it
+	Seltext   *Text
+	Mousetext *Text // global because Text.close needs to clear it
+	Barttext  *Text // shared between mousetask and keyboardthread
+)
 
 const (
 	TABDIR = 3

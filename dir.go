@@ -22,7 +22,7 @@ type Dir struct {
 	// file data
 	Qid  Qid    // Unique ID from the server
 	Mode uint32 // Permission bits
-	// BUG(bwsd): vulnerable to Y2K38 pproblem
+	// BUG(bwsd): vulnerable to Y2K38
 	Atime uint32 // last read time
 	Mtime uint32 // last write time
 

@@ -5,6 +5,30 @@ import (
 	"io"
 )
 
+/*
+The Plan 9 File Protocol, 9P, is used for messages between clients and servers.
+A client transmits requests (T-messages) to a server, which subsequently
+returns replies (R-messages) to the client. The combined acts of transmitting
+(receiving) a request of a particular type, and receiving (transmitting) its
+reply is called a transaction of that type.
+
+T-message
+
+Each T-message has a tag field, chosen and used by the client to identify the
+message. The reply to the message will have the same tag. Clients must arrange
+that no two outstanding messages on the same connection have the same tag. An
+exception is the tag NOTAG, defined as (ushort)~0 in <fcall.h>: the client can
+use it, when establishing a connection, to override tag matching in version
+messages.
+
+R-message
+
+The type of an R-message will either be one greater than the type of the
+corresponding T-message or Rerror, indicating that the request failed. In the
+latter case, the ename field contains a string describing the reason for
+failure.
+*/
+
 const (
 	Tversion = 100 + iota
 	Rversion
@@ -40,35 +64,56 @@ const (
 // Fcall represents a 9P2000 message.
 type Fcall struct {
 	// Type is one Tversion, Rversion, Tattach, Rattach etc.
-	Type    uint8    // Message type
-	Fid     uint32   // File identifier
-	Tag     uint16   // Message tag
-	Msize   uint32   // Maximum message size
-	Version string   // Tversion, Rversion
-	Oldtag  uint16   // Tflush
-	Ename   string   // Rerror
-	Qid     Qid      // Rattach, Ropen, Rcreate
-	Iounit  uint32   // Ropen, Rcreate
-	Aqid    Qid      // Rauth
-	Afid    uint32   // Tauth, Tattach
-	Uname   string   // Tauth, Tattach (user name)
-	Aname   string   // Tauth, Tattach (attach name)
-	Perm    uint32   // Tcreate (file permission mode)
-	Name    string   // Tcreate
-	Mode    uint8    // Tcreate, Topen
-	Newfid  uint32   // Twalk
-	Wname   []string // Twalk
-	Wqid    []Qid    // Rwalk
-	Offset  uint64   // Tread, Twrite
-	Count   uint32   // Tread, Rwrite
-	Data    []byte   // Twrite, Rread
-	Stat    []byte   // Twstat, Rstat
+	Type    uint8  // Message type
+	Fid     uint32 // File identifier for the current file on the server.
+	Tag     uint16 // Message tag
+	Msize   uint32 // Maximum message size
+	Version string // Tversion, Rversion
+	Oldtag  uint16 // Tflush
+	Ename   string // Rerror
+	// Replies (R-messages) to auth, attach, walk, open, and create requests
+	// convey a qid field back to the client.
+	Qid    Qid    // Rattach, Ropen, Rcreate
+	Iounit uint32 // Ropen, Rcreate
+	Aqid   Qid    // Rauth
+	// Permission to attach to the service is proven by providing a special fid,
+	// called afid, in the attach message.
+	Afid   uint32   // Tauth, Tattach
+	Uname  string   // Tauth, Tattach (user name)
+	Aname  string   // Tauth, Tattach (attach name)
+	Perm   uint32   // Tcreate (file permission mode)
+	Name   string   // Tcreate
+	Mode   uint8    // Tcreate, Topen
+	Newfid uint32   // Twalk
+	Wname  []string // Twalk
+	Wqid   []Qid    // Rwalk
+	Offset uint64   // Tread, Twrite
+	Count  uint32   // Tread, Rwrite
+	Data   []byte   // Twrite, Rread
+	// The stat field in the reply includes the file's name, access permissions
+	// (read, write and execute or owner, group and public), access and
+	// modification times, and owner and group identifications (see stat(2)).
+	Stat []byte // Twstat, Rstat
 
 	// 9P2000.u extensions
 	Errno     uint32 // Rerror (error code)
 	Uid       uint32 // Tattach, Tauth
 	Extension string // Tcreate (special file description)
 }
+
+/*
+Messsage encoding
+
+Each message consists of a sequence of bytes. Two, four, and eight-byte fields
+hold unsigned integers represented in little-endian order (least significant
+byte first). Data items of larger or variable lengths are represented by a
+two-byte field specifying a count, n, followed by n bytes of data. Text strings
+are represented this way, with the text itself stored as a UTF-8 encoded
+sequence of Unicode characters (see utf(6)). Text strings in 9P messages are
+not NUL-terminated: n counts the bytes of UTF-8 data, which include no final
+zero byte. The NUL character is illegal in all text strings in 9P, and is
+therefore excluded from file names, user names, and so on.
+*/
 
 func (f *Fcall) Bytes() ([]byte, error) {
 	b := pbit32(nil, 0) // length: fill in later
